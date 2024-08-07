@@ -18,7 +18,14 @@ const faqs = [
 
 // `isOpen` state değişkenini ana bileşene ( FAQ) kaldırarak ve verileri props aracılığıyla aşağı aktararak state paylaşın
 export default function FAQ() {
-  const [isOpen, setOpen] = useState(false)
+  const [isOpen, setOpen] = useState(/*false*/null)
+
+  const handleClickOpen = (index) => {
+    //setOpen((isOpen) => !isOpen)
+    //Bu şekilde ikisi birden açılıp kapanıyor.
+    //Ayrı ayrı açılıp kapanmasını sağlamak için kodu aşağıdaki şekilde değiştirdim.
+    setOpen(prev => (prev === index ? null : index))
+  }
 
   return (
     <div className='bg-white'>
@@ -28,8 +35,8 @@ export default function FAQ() {
             Sıkça sorulan sorular
           </h2>
           <dl className='mt-10 space-y-6 divide-y divide-gray-900/10'>
-            {faqs.map((faq) => (
-              <Accordion key={faq.id} faq={faq} />
+            {faqs.map((faq,index) => (
+              <Accordion key={faq.id} faq={faq} isOpen={isOpen === index} onClickOpen={() => handleClickOpen(index)}/>
             ))}
           </dl>
         </div>
@@ -38,12 +45,12 @@ export default function FAQ() {
   )
 }
 
-function Accordion({ faq }) {
+function Accordion({ faq, isOpen,onClickOpen }) {
   return (
     <div className='pt-6'>
       <dt>
         <button
-          onClick={() => setOpen((isOpen) => !isOpen)}
+          onClick={onClickOpen}
           className='flex w-full items-start justify-between text-left text-gray-900'
         >
           <span className='text-base font-semibold leading-7'>
